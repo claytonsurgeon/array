@@ -1,0 +1,19 @@
+
+
+
+Error handling
+
+the array compiler generates a bytecode array
+the array executor executes a bytecode array (continuously)
+
+each function is an executable AST node that pushes a respective value onto the stack, each function will perform all possible reductions
+
+variables cascade through the tree structure
+
+each function performs type checking that allows the definitions of strongly typed graphs with type inference
+
+generic numbers Integer and Decimal are coerced into concrete ints like i32, i64, u8, f64, etc
+
+generic integer can be coerced into a float point value, but a generic decimal cannot be coerced into a machine integer value
+
+iz, uz, and fz are register sized numbers

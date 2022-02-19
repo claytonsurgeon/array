@@ -11,6 +11,17 @@ u32 END = 0;
 idx lookup[100] = {0};
 u32 count = 0;
 
+
+typedef struct _Key {
+	idx idx;
+	char key[100];
+} Key;
+
+Key labels[1000] = {0};
+
+
+
+
 // no matter how simple I make a C macro it still manages to fuck me
 #define get_code(i) ((Code *) (MEM+i))
 #define get_data(T, i) ((T *) (MEM+i+CodeSize))
@@ -20,9 +31,11 @@ u32 count = 0;
 // #define get_array(T, i) ((T *) ( (MEM+i+CodeSize) + 1))
 
 #define get_shape(i) ((Shape *) (get_code(i)->shape))
+#define get_rank1(i) ((Rank1 *) (get_code(i)->shape))
 
 #define get_array(T, i) ((T *) (get_shape(i)->lens + (get_shape(i)->rank)))
-
+// #define get_graph(T, i) ((T *) (&get_rank1(i)->len + 1))
+#define get_graph(i) ((idx *) (get_code(i)->shape + 1))	// get rank1 data array
 
 void panic(char message[]) {
 	printf("ERROR: ");

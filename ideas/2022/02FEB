@@ -16,4 +16,57 @@ generic numbers Integer and Decimal are coerced into concrete ints like i32, i64
 
 generic integer can be coerced into a float point value, but a generic decimal cannot be coerced into a machine integer value
 
-iz, uz, and fz are register sized numbers
+iz, uz, and fz are register sized numbers\
+
+
+
+
+ref and key
+
+
+push allows for multi-push
+
+key creates a label for a point
+ref looks up the label in the label table
+
+keys 
+
+
+
+idx add = Graph(
+	key("a", i32(0)),
+	key("b", i32(0)),
+	key("->", addi32(
+		ref("a"),
+		ref("b"),
+	))
+)
+
+idx add = Graph(
+	key("->", addi32(
+		ref("a"),
+		ref("b"),
+	))
+	key("a", i32(0)),
+	key("b", i32(0)),
+)
+
+// add: { a + b <- a: b: ![i32] }
+
+contrary to my current design, it might be better for consumers to be specified *before* the value they reference is declared
+this allows the push array to be pre-calculated, of course that mean that the operators would have to be typed
+
+push(someIdx, 
+	consumer
+	consumer
+	consumer
+)
+
+
+when a node is updated it display some kind of signal that activates the dependant nodes without have to have a dep list
+
+    
+
+
+references could be collected then the ref array could be added at the end of the memory space once their dimensions are known
+this is ideal, because even though this ruins the locality, it doesn't matter because keys are base expressions anyway

@@ -45,22 +45,24 @@ void print_point(idx i) {
 			// u16 rank = get_data(u16, i)[0];
 			// u16 len = get_data(u16, i)[1];
 
-			Shape * shape = get_shape(i);
+			Rank1 * shape = get_rank1(i);
 			// idx base = shape->base;
-			idx rank = shape->rank;
-			idx*lens = shape->lens;
+			// idx rank = shape->rank;
+			idx len = shape->len;
 
 			
-			printf(" base: %s, rank: %u, shape:", OP_str[0], rank);
-			for (u16 j = 0; j < rank; j++) {
-				printf(" %u", lens[j]);
-			}
-			printf("\n\t    {");
-			for (u16 j = 0; j < rank; j++) {
-				for (u16 k = 0; k < lens[j]; k++) {
-					printf(" @%.4x ", get_array(idx, i)[k]);
+			// printf(" base: %s, rank: %u, shape:", OP_str[0], rank);
+			// for (u16 j = 0; j < rank; j++) {
+			// 	printf(" %u", lens[j]);
+			// }
+			// printf("\n\t    {");
+
+			printf(" { ");
+			// for (u16 j = 0; j < rank; j++) {
+				for (u16 k = 0; k < len; k++) {
+					printf(" @%.4x ", get_graph(i)[k]);
 				}
-			}
+			// }
 			// printf(" rank: %u, shape: %u, {", rank, len);
 			// for (u16 j = 0; j < len; j++) {
 			// 	printf(" @%.4x ", get_data(idx, i)[2 + j]);
@@ -101,25 +103,39 @@ void print_point(idx i) {
 			// u16 rank = get_data(u16, i)[0];
 			// u16 len = get_data(u16, i)[1];
 			
-			Shape * shape = get_shape(i);
-			idx rank = shape->rank;
-			idx*lens = shape->lens;
+			Rank1 * shape = get_rank1(i);
+			// idx rank = shape->rank;
+			// idx*lens = shape->lens;
+			idx len = shape->len;
 
-			printf(" rank: %u, shape:", rank);
-			for (u16 j = 0; j < rank; j++) {
-				printf(" %u", lens[j]);
-			}
+			// printf(" rank: %u, shape:", rank);
+			// for (u16 j = 0; j < rank; j++) {
+			// 	printf(" %u", lens[j]);
+			// }
 			printf(" [");
-			for (u16 j = 0; j < rank; j++) {
-				for (u16 k = 0; k < lens[j]; k++) {
-					if (k == lens[j]-1) {
-						printf("@%.4x", get_array(idx, i)[k]);
+			// for (u16 j = 0; j < rank; j++) {
+			// 	for (u16 k = 0; k < lens[j]; k++) {
+			// 		if (k == lens[j]-1) {
+			// 			printf("@%.4x", get_array(idx, i)[k]);
+			// 		}
+			// 		else {
+			// 			printf("%u, ", get_array(idx, i)[k]);
+			// 		}
+			// 	}
+			// }
+			// for (u16 j = 0; j < rank; j++) {
+				for (u16 k = 0; k < len; k++) {
+					if (k == len-1) {
+						printf("@%.4x", get_graph(i)[k]);
 					}
 					else {
-						printf("%u, ", get_array(idx, i)[k]);
+						printf("%u, ", get_graph(i)[k]);
 					}
 				}
-			}
+			// }
+
+
+
 			// printf(" rank: %u, shape: %u, [", rank, len);
 			// for (u16 j = 0; j < len; j++) {
 			// 	if (j == len-1) {

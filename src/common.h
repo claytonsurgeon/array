@@ -100,9 +100,10 @@ typedef struct _Shape {
 } Shape;
 
 typedef struct _Rank1 {
-	idx	base;
-	idx	rank;
-	idx	lens[1];
+	// idx	base;
+	// idx	rank;
+	// idx	lens[1];
+	idx len;
 } Rank1;
 
 #define Rank1Size (sizeof(Rank1))

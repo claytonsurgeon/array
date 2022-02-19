@@ -93,12 +93,13 @@ idx _Graph(int length, ...) {
 	Rank1 * shape = (Rank1 *) (C->shape);
 	// Rank1 * shape = (Rank1 *) (MEM+END);
 
-	shape->base = 0;	// graphs should always have a base of zero, because they are nothing more than an array of idx's
-	shape->rank = 1;	// graphs are always rank 1
-	shape->lens[0] = length;
+	// shape->base = 0;	// graphs should always have a base of zero, because they are nothing more than an array of idx's
+	// shape->rank = 1;	// graphs are always rank 1
+	// shape->lens[0] = length;
+	shape->len = length;
 	END += Rank1Size;
 
-	idx * points = get_array(idx, index);
+	idx * points = get_graph(index);
 
 
 
@@ -152,12 +153,13 @@ idx _Space(int length, ...) {
 	// END += dimens_size;
 	
 	Rank1 * shape = (Rank1 *) (C->shape);
-	shape->base = 0;	// spaces should always have a base of zero, because they are nothing more than an array of scalars of size idx
-	shape->rank = 1;	// spaces are always rank 1
-	shape->lens[0] = length;
+	// shape->base = 0;	// spaces should always have a base of zero, because they are nothing more than an array of scalars of size idx
+	// shape->rank = 1;	// spaces are always rank 1
+	// shape->lens[0] = length;
+	shape->len = length;
 	END += Rank1Size;
 
-	idx * points = get_array(idx, index);
+	idx * points = get_graph(index);
 	for (u16 i = 0; i < length; i++) {
 		idx p = va_arg(ptr, int);
 		// memcpy(MEM+END, &p, IdxSize);
@@ -198,9 +200,11 @@ idx Cast(idx space_idx, idx graph_idx) {
 	if (space->code != SPACE_OP) {
 		panic("cast given non-space");
 	}
-	idx rank = get_shape(space_idx)->rank;
-	idx*lens = get_shape(space_idx)->lens;
-	idx * space_data = get_array(idx, space_idx);
+	// idx rank = get_shape(space_idx)->rank;
+	// idx*lens = get_shape(space_idx)->lens;
+	idx len = get_rank1(space_idx)->len;
+	// idx * space_data = get_array(idx, space_idx);
+	idx * space_data = get_graph(space_idx);
 
 
 
@@ -217,7 +221,7 @@ idx Cast(idx space_idx, idx graph_idx) {
 	// each dimension of Space is expected to be idx in size
 
 	
-	Rank1 * shape = (Rank1 *) (array->shape);
+	Shape * shape = (Shape *) (array->shape);
 	shape->base = 0;
 	shape->rank = 0;
 	END += ShapeSize;
@@ -227,24 +231,43 @@ idx Cast(idx space_idx, idx graph_idx) {
 
 
 	// rank should always be 1 for Space object
-	for (int i = 0; i < rank; i++) {
-		for (int j = 0; j < lens[i]; j++) {
-			u16 len = lens[i];
-			if (j == len-1) {
-				shape->base = space_data[j];
-				Code * type = get_code(shape->base);
-				printf("test: %s\n", OP_str[type->code]);
-				array_size = total_points * OP_size[type->code];
-			}
-			else {
-				total_points *= space_data[j];
-				shape->rank += 1;
-				shape->lens[j] = space_data[j];
-				// memcpy(MEM+END, &space_data[j], CodeSize);
-				END += IdxSize;
-			}
+	// for (int i = 0; i < rank; i++) {
+	// 	for (int j = 0; j < lens[i]; j++) {
+	// 		u16 len = lens[i];
+	// 		if (j == len-1) {
+	// 			shape->base = space_data[j];
+	// 			Code * type = get_code(shape->base);
+	// 			printf("test: %s\n", OP_str[type->code]);
+	// 			array_size = total_points * OP_size[type->code];
+	// 		}
+	// 		else {
+	// 			total_points *= space_data[j];
+	// 			shape->rank += 1;
+	// 			shape->lens[j] = space_data[j];
+	// 			// memcpy(MEM+END, &space_data[j], CodeSize);
+	// 			END += IdxSize;
+	// 		}
+	// 	}
+	// }
+	
+
+	for (int j = 0; j < len; j++) {
+		if (j == len-1) {
+			shape->base = space_data[j];
+			Code * type = get_code(shape->base);
+			printf("test: %s\n", OP_str[type->code]);
+			array_size = total_points * OP_size[type->code];
+		}
+		else {
+			total_points *= space_data[j];
+
+			shape->rank += 1;
+			shape->lens[j] = space_data[j];
+			// memcpy(MEM+END, &space_data[j], CodeSize);
+			END += IdxSize;
 		}
 	}
+
 	printf("point size %u, space size %u\n", total_points, array_size);
 
 
@@ -253,8 +276,9 @@ idx Cast(idx space_idx, idx graph_idx) {
 		panic("cast given non-graph");
 	}
 	// idx rank = get_shape(graph_idx)->rank;
-	idx graph_len = get_shape(graph_idx)->lens[0];
-	idx * graph_data = get_array(idx, graph_idx);
+	idx graph_len = get_rank1(graph_idx)->len;
+	// idx * graph_data = get_array(idx, graph_idx);
+	idx * graph_data = get_graph(graph_idx);
 
 	idx base_width = OP_size[get_code(shape->base)->code];
 
@@ -429,13 +453,13 @@ void runner() {
 			I32(8), I32(8), I32(1)
 		));
 
-	idx ID3 = Cast(
-		Space(16, I32(0)),
-		Graph(
-			I32(1), I32(7), I32(7),
-			I32(6), I32(1), I32(6),
-			I32(8), I32(8), I32(1)
-		));
+	// idx ID3 = Cast(
+	// 	Space(16, I32(0)),
+	// 	Graph(
+	// 		I32(1), I32(7), I32(7),
+	// 		I32(6), I32(1), I32(6),
+	// 		I32(8), I32(8), I32(1)
+	// 	));
 	// Cast(Space(1000, 5, I32(0)), Graph(I32(1), I32(2)));
 
 	// Signal()

@@ -12,13 +12,14 @@ idx lookup[100] = {0};
 u32 count = 0;
 
 
-typedef struct _Key {
-	idx idx;
-	char key[100];
-} Key;
+typedef struct _key {
+	idx index;
+	idx shell;
+	char label[100];
+} key;
 
-Key labels[1000] = {0};
-
+key KEYS[1000] = {0};
+idx key_count = 0;
 
 
 
@@ -43,3 +44,19 @@ void panic(char message[]) {
 	printf("\n");
 	abort();
 }
+
+
+
+
+void add_label (char label[], idx value) {
+	// KEYS[key_count] = {
+	// 	.index = value,
+	// 	.shell = 0
+	// };
+}
+
+idx key_to_idx(char label[]) { return 0;}
+void idx_to_key(idx index, char label[]) {}
+
+
+void inc_shells(){}

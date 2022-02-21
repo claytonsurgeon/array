@@ -399,10 +399,25 @@ idx Axis() {
 }
 
 
+idx Key(char label[], idx value) {
 
+	add_label(label, value);
+
+	return value;
+}
 
 
 void runner() {
+	I32(40);
+
+	Key("ID4x4", Cast(
+		Space(4, 4, I32(0)),
+		Graph(
+			I32(1), I32(7), I32(7),
+			I32(6), I32(1), I32(6),
+			I32(8), I32(8), I32(1)
+		)
+	));
 
 	// printf("code size %u\n", CodeSize);
 	// printf("Rank1 size %u\n", Rank1Size);
@@ -437,7 +452,6 @@ void runner() {
 	// 		I32(40)
 	// 	)
 	// );
-	// I32(40);
 	// Graph(I32(10), I32(20), I32(30));
 	// idx ID = Graph(
 	// 	Graph(I32(1), I32(0), I32(0)),
@@ -445,13 +459,22 @@ void runner() {
 	// 	Graph(I32(0), I32(0), I32(1))
 	// );
 
-	idx ID3x3 = Cast(
-		Space(4, 4, I32(0)),
-		Graph(
-			I32(1), I32(7), I32(7),
-			I32(6), I32(1), I32(6),
-			I32(8), I32(8), I32(1)
-		));
+
+
+	// Key("add", Graph(
+	// 	Key("a", I32(0)),
+	// 	Key("b", I32(0)),
+	// 	Ret(AddI32(
+	// 		Ref("a"), Ref("b")
+	// 	))
+	// ));
+
+
+	// Kef("result", Apply("add",
+	// 	Key("a", I32(20)),
+	// 	Key("b", I32(30))
+	// ));
+
 
 	// idx ID3 = Cast(
 	// 	Space(16, I32(0)),

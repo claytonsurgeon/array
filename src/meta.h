@@ -57,7 +57,7 @@ void print_point(idx i) {
 			// }
 			// printf("\n\t    {");
 
-			printf(" { ");
+			printf(" {");
 			// for (u16 j = 0; j < rank; j++) {
 				for (u16 k = 0; k < len; k++) {
 					printf(" @%.4x ", get_graph(i)[k]);
